@@ -6,6 +6,8 @@ CFLAGS = -std=c99 -Wall -Wextra
 SRC = main.c hash.c
 OBJ = $(SRC:.c=.o)
 
+all: $(TARGET)
+
 $(TARGET): $(OBJ)
 	$(CC) $(CFLAGS) $(OBJ) -o $(TARGET)
 

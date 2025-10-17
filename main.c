@@ -11,7 +11,7 @@
 
 #include "hash.h"
 
-#define BUFFER_SIZE 80
+#define BUFFER_SIZE 1000
 
 struct Result {
     double time;
@@ -55,6 +55,7 @@ void readFileRandom(int fd, uint64_t* hash, size_t file_size){
             current = end;
             end--;
         }
+        fromBegging = !fromBegging;
         lseek(fd, current * BUFFER_SIZE, SEEK_SET);
         bytes = read(fd, buffer, BUFFER_SIZE);
         *hash = ul_crc64_update(buffer, bytes, *hash);
@@ -104,6 +105,7 @@ void mmapFileRandom(int fd, uint64_t* hash, size_t file_size){
             current = end;
             end--;
         }
+        fromBegging = !fromBegging;
         size_t offset = current * BUFFER_SIZE;
         size_t block_size = BUFFER_SIZE;
         if (offset + BUFFER_SIZE > file_size) {

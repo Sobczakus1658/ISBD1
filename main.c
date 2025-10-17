@@ -11,7 +11,7 @@
 
 #include "hash.h"
 
-#define BUFFER_SIZE 1000
+#define BUFFER_SIZE 80
 
 struct Result {
     double time;

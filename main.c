@@ -11,7 +11,7 @@
 
 #include "hash.h"
 
-#define BUFFER_SIZE 80
+#define BUFFER_SIZE 32768
 
 struct Result {
     double time;
@@ -28,7 +28,7 @@ int openDescriptor(const char *file) {
 }
 
 size_t getNumBlocks(size_t file_size){
-    return (file_size + BUFFER_SIZE -1) / BUFFER_SIZE - 1;
+    return (file_size + BUFFER_SIZE - 1) / BUFFER_SIZE - 1;
 }
 
 void readFileSequentially(int fd, uint64_t* hash, __attribute__((unused)) size_t file_size){
@@ -106,13 +106,12 @@ void mmapFileRandom(int fd, uint64_t* hash, size_t file_size){
             end--;
         }
         fromBegging = !fromBegging;
-        size_t offset = current * BUFFER_SIZE;
+        size_t offset = current * (size_t)BUFFER_SIZE;
         size_t block_size = BUFFER_SIZE;
         if (offset + BUFFER_SIZE > file_size) {
             block_size = file_size - offset;
         }
         *hash = ul_crc64_update(file + offset, block_size, *hash);
-        offset += block_size;
     }
     munmap(file, file_size);
 }
@@ -154,7 +153,7 @@ int main(int argc, char* argv[]) {
     result = measureTimeRun(file_path, readFileRandom);
     printf("Random     read : Time %.9f seconds, Hash: %" PRId64 "\n", result.time, result.hash);
 
-    result = measureTimeRun(file_path, mmapFileSequentially);
+   result = measureTimeRun(file_path, mmapFileSequentially);
     printf("Sequential mmap : Time %.9f seconds, Hash: %" PRId64 "\n", result.time, result.hash);
 
     result = measureTimeRun(file_path, mmapFileRandom);

@@ -11,7 +11,7 @@
 
 #include "hash.h"
 
-#define BUFFER_SIZE 80
+#define BUFFER_SIZE 1000
 
 struct Result {
     double time;
@@ -42,7 +42,7 @@ void readFileSequentially(int fd, uint64_t* hash, __attribute__((unused)) size_t
 void readFileRandom(int fd, uint64_t* hash, size_t file_size){
     char buffer[BUFFER_SIZE];
     bool fromBegging = true;
-    int current = 0;
+    size_t current = 0;
     size_t begin = 0;
     size_t end = getNumBlocks(file_size);
     ssize_t bytes;
@@ -93,7 +93,7 @@ void mmapFileRandom(int fd, uint64_t* hash, size_t file_size){
     if (file == NULL) return;
 
     bool fromBegging = true;
-    int current = 0;
+    size_t current = 0;
     size_t begin = 0;
     size_t end = getNumBlocks(file_size);
 
